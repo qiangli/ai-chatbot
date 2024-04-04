@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+  # https://github.com/vercel/ai-chatbot
+  # https://vercel.com/guides/does-vercel-support-docker-deployments
+  ai-chatbot:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: local/ai-chatbot
+    container_name: ai-chatbot
+    command: ["node", "server.js"]
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # Generate a random secret: `openssl rand -base64 32`
+      - AUTH_SECRET=XUzLZgoppq808w+z9kEdkpMChchXi7dHryKVMQo9jDU=
+      #
+      - KV_URL=
+      # - KV_REST_API_URL=http://localhost:8079
+      - KV_REST_API_URL=http://srh:80
+      - KV_REST_API_TOKEN=no_token
+      - KV_REST_API_READ_ONLY_TOKEN=
+      # - NEXTAUTH_URL=http://localhost:3000
+    ports:
+      - "3000:3000"
+    restart: always
+
+  redis:
+    image: redis/redis-stack-server:6.2.6-v6 
+    ports:
+      - '6379:6379'
+    environment:
+      # persist
+      - REDIS_ARGS=--save 5 1
+    volumes:
+      - redis-data:/data
+
+  # https://github.com/hiett/serverless-redis-http
+  # srh/build.sh
+  srh:
+    ports:
+      - '8079:80'
+    image: local/srh:latest
+    environment:
+      SRH_MODE: env
+      SRH_TOKEN: no_token
+      SRH_CONNECTION_STRING: 'redis://redis:6379'
+      SRH_MAX_CONNECTIONS: 3
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "28081:8081"
+    restart: unless-stopped
+
+volumes:
+  redis-data:
