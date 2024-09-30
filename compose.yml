@@ -1,0 +1,31 @@
+#
+services:
+  # https://github.com/vercel/ai-chatbot
+  # https://vercel.com/guides/does-vercel-support-docker-deployments
+  ai-chatbot:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      # target: builder
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    image: local/ai-chatbot
+    command: ["node", "server.js"]
+    # NEXT_DEBUG=true pnpm dev
+    # command: ["pnpm", "dev"]
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # Generate a random secret: `openssl rand -base64 32`
+      - AUTH_SECRET=XUzLZgoppq808w+z9kEdkpMChchXi7dHryKVMQo9jDU=
+      #
+      - KV_URL=
+      # - KV_REST_API_URL=http://localhost:8079
+      - KV_REST_API_URL=http://srh:8080
+      - KV_REST_API_TOKEN=no_token
+      - KV_REST_API_READ_ONLY_TOKEN=
+      # - NEXTAUTH_URL=http://localhost:30001
+      - NEXT_DEBUG=true
+    # ports:
+    #   - 30001:3000
+    restart: always

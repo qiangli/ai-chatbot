@@ -11,12 +11,15 @@ export const metadata = {
 
 export default async function IndexPage() {
   const id = nanoid()
-  const session = (await auth()) as Session
-  const missingKeys = await getMissingKeys()
+  const session = await auth()
+
+  if (!session?.user) {
+    return null
+  }
 
   return (
     <AI initialAIState={{ chatId: id, messages: [] }}>
-      <Chat id={id} session={session} missingKeys={missingKeys} />
+      <Chat id={id} session={session} missingKeys={[]} />
     </AI>
   )
 }

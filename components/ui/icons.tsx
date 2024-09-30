@@ -137,6 +137,22 @@ function IconGitHub({ className, ...props }: React.ComponentProps<'svg'>) {
   )
 }
 
+function IconHome({ className, ...props }: React.ComponentProps<'svg'>) {
+  return (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+      className={cn('size-4', className)}
+      {...props}
+    >
+      <title>Home</title>
+      <path d="M12 3L2 12h3v9h6v-6h2v6h6v-9h3L12 3zm0 2.2L18 12h-3v7h-2v-5H9v5H7v-7H4l8-8.8z" />
+    </svg>
+  )
+}
+
 function IconSeparator({ className, ...props }: React.ComponentProps<'svg'>) {
   return (
     <svg
@@ -482,6 +498,7 @@ export {
   IconOpenAI,
   IconVercel,
   IconGitHub,
+  IconHome,
   IconSeparator,
   IconArrowDown,
   IconArrowRight,

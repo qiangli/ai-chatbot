@@ -34,11 +34,11 @@ export async function generateMetadata({
 }
 
 export default async function ChatPage({ params }: ChatPageProps) {
-  const session = (await auth()) as Session
-  const missingKeys = await getMissingKeys()
+  const session = await auth()
 
   if (!session?.user) {
-    redirect(`/login?next=/chat/${params.id}`)
+    // redirect(`/login?next=/chat/${params.id}`)
+    return null
   }
 
   const userId = session.user.id as string
@@ -57,7 +57,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
           id={chat.id}
           session={session}
           initialMessages={chat.messages}
-          missingKeys={missingKeys}
+          missingKeys={[]}
         />
       </AI>
     )

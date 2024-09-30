@@ -69,3 +69,22 @@ export async function authenticate(
     }
   }
 }
+
+export async function guestUser(id: string, key: string) {
+  const email = id + '@example.com'
+  const existingUser = await getUser(email)
+
+  if (existingUser) {
+    return existingUser
+  } else {
+    const user = {
+      id: crypto.randomUUID(),
+      email,
+      password: key
+    }
+
+    await kv.hmset(`user:${email}`, user)
+
+    return user
+  }
+}

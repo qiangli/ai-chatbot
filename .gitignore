@@ -34,5 +34,14 @@ yarn-error.log*
 
 .env
 .vercel
-.vscode
+.vscode/*
 .env*.local
+
+#
+!.vscode/launch.json
+!.vscode/extensions.json
+
+*.log
+
+#
+compose.override.yml
