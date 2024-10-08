@@ -44,4 +44,7 @@ yarn-error.log*
 *.log
 
 #
+*.tsbuildinfo
+
+#
 compose.override.yml

@@ -1,6 +1,6 @@
 import { format, parseISO } from 'lib/utils'
 
-interface Event {
+export interface Event {
   date: string
   headline: string
   description: string

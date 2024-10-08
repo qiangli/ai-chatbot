@@ -12,7 +12,7 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
       )}
       {...props}
     >
-      <ExternalLink href="https://github.com/dhnt">
+      <ExternalLink href="https://github.com/openaide">
         © 2024 All Rights Reserved.
       </ExternalLink>
     </p>

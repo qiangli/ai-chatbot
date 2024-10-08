@@ -6,6 +6,8 @@ import { toast } from 'sonner'
 
 import { ServerActionResult } from '@/lib/types'
 import { Button } from '@/components/ui/button'
+import { IconTrash } from '@/components/ui/icons'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,7 +39,8 @@ export function ClearHistory({
       <AlertDialogTrigger asChild>
         <Button variant="ghost" disabled={!isEnabled || isPending}>
           {isPending && <IconSpinner className="mr-2" />}
-          Clear
+          <IconTrash className="transition-all" />
+          Clear chat history
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

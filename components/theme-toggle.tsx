@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { useTheme } from 'next-themes'
+import Cookies from 'js-cookie'
 
 import { Button } from '@/components/ui/button'
 import { IconMoon, IconSun } from '@/components/ui/icons'
@@ -10,13 +11,26 @@ export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
   const [_, startTransition] = React.useTransition()
 
+  React.useEffect(() => {
+    const storedTheme = Cookies.get('theme')
+    if (storedTheme) {
+      setTheme(storedTheme)
+    }
+  }, [setTheme])
+
   return (
     <Button
       variant="ghost"
       size="icon"
       onClick={() => {
         startTransition(() => {
-          setTheme(theme === 'light' ? 'dark' : 'light')
+          const newTheme = theme === 'light' ? 'dark' : 'light'
+          setTheme(newTheme)
+          Cookies.set('theme', newTheme, {
+            expires: 365 * 100,
+            path: '/',
+            domain: '.openaide.localhost'
+          })
         })
       }}
     >

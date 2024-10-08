@@ -10,6 +10,7 @@ import { SidebarMobile } from './sidebar-mobile'
 import { SidebarToggle } from './sidebar-toggle'
 import { ChatHistory } from './chat-history'
 import { Session } from '@/lib/types'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 async function UserOrLogin() {
   const session = (await auth()) as Session
@@ -34,9 +35,10 @@ async function UserOrLogin() {
         {session?.user ? (
           <UserMenu user={session.user} />
         ) : (
-          <Button variant="link" asChild className="-ml-2">
-            {/* <Link href="/login">Login</Link> */}
-          </Button>
+          <></>
+          // <Button variant="link" asChild className="-ml-2">
+          //   <Link href="/login">Login</Link>
+          // </Button>
         )}
       </div>
     </>
@@ -52,9 +54,10 @@ export function Header() {
         </React.Suspense>
       </div>
       <div className="flex items-center justify-end space-x-2">
+        <ThemeToggle />
         <a
           target="_blank"
-          href="//home.test.localhost/"
+          href="//home.openaide.localhost/"
           rel="noopener noreferrer"
           className={cn(buttonVariants({ variant: 'outline' }))}
         >

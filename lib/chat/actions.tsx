@@ -21,9 +21,11 @@ import {
 
 import { z } from 'zod'
 import { EventsSkeleton } from '@/components/stocks/events-skeleton'
-import { Events } from '@/components/stocks/events'
+import { Event, Events } from '@/components/stocks/events'
 import { StocksSkeleton } from '@/components/stocks/stocks-skeleton'
-import { Stocks } from '@/components/stocks/stocks'
+import { Stocks, StocksProps } from '@/components/stocks/stocks'
+import { StockProps } from '@/components/stocks/stock'
+import { PurchaseProps } from '@/components/stocks/stock-purchase'
 import { StockSkeleton } from '@/components/stocks/stock-skeleton'
 import {
   formatNumber,
@@ -35,6 +37,7 @@ import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat, Message } from '@/lib/types'
 import { auth } from '@/auth'
+import { Session } from '@/lib/types'
 
 async function confirmPurchase(symbol: string, price: number, amount: number) {
   'use server'
@@ -108,6 +111,7 @@ async function confirmPurchase(symbol: string, price: number, amount: number) {
 
 async function submitUserMessage(content: string) {
   'use server'
+  const session = (await auth()) as Session
 
   const aiState = getMutableAIState<typeof AI>()
 
@@ -127,23 +131,18 @@ async function submitUserMessage(content: string) {
   let textNode: undefined | React.ReactNode
 
   const result = await streamUI({
-    model: openai('gpt-4-turbo'),
+    model: openai(session.user.model),
     initial: <SpinnerMessage />,
-    system: `\
-    You are a stock trading conversation bot and you can help users buy stocks, step by step.
-    You and the user can discuss stock prices and the user can adjust the amount of stocks they want to buy, or place an order, in the UI.
-
-    Messages inside [] means that it's a UI element or a user event. For example:
-    - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
-    - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
-
-    If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
-    If the user just wants the price, call \`show_stock_price\` to show the price.
-    If you want to show trending stocks, call \`list_stocks\`.
-    If you want to show events, call \`get_events\`.
-    If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
-
-    Besides that, you can also chat with users and do some calculations if needed.`,
+    system: `
+    Your are a virtual assistant and you can help with daily tasks, home automation, and entertainment.
+    You can perform tasks like setting timers, playing music, answering questions, controlling smart home devices, shopping online, and providing real time
+    information such as weather, office hours, traffic, flight schedules, show times, news events, or stock prices.
+    You can check emails, send messages, schedule appointments, make reservations, order food, and book a ride.
+    You can search the web, read articles, play games, and tell jokes.
+    All in all, you beat Amazon Echo, Apple Siri, and Google Home.
+ 
+    If any task you are incapable of doing, say you are still learning and wish you could help in the future.
+    `,
     messages: [
       ...aiState.get().messages.map((message: any) => ({
         role: message.role,
@@ -316,6 +315,11 @@ async function submitUserMessage(content: string) {
             )
         }),
         generate: async function* ({ symbol, price, numberOfShares = 100 }) {
+          yield (
+            <BotCard>
+              <StockSkeleton />
+            </BotCard>
+          )
           const toolCallId = nanoid()
 
           if (numberOfShares <= 0 || numberOfShares > 1000) {
@@ -558,23 +562,19 @@ export const getUIStateFromAIState = (aiState: Chat) => {
             return tool.toolName === 'listStocks' ? (
               <BotCard>
                 {/* TODO: Infer types based on the tool result*/}
-                {/* @ts-expect-error */}
-                <Stocks props={tool.result} />
+                <Stocks props={tool.result as StocksProps} />
               </BotCard>
             ) : tool.toolName === 'showStockPrice' ? (
               <BotCard>
-                {/* @ts-expect-error */}
-                <Stock props={tool.result} />
+                <Stock props={tool.result as StockProps} />
               </BotCard>
             ) : tool.toolName === 'showStockPurchase' ? (
               <BotCard>
-                {/* @ts-expect-error */}
-                <Purchase props={tool.result} />
+                <Purchase props={tool.result as PurchaseProps} />
               </BotCard>
             ) : tool.toolName === 'getEvents' ? (
               <BotCard>
-                {/* @ts-expect-error */}
-                <Events props={tool.result} />
+                <Events props={tool.result as Event[]} />
               </BotCard>
             ) : null
           })

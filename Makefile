@@ -8,7 +8,6 @@
 .DEFAULT_GOAL := help
 
 .PHONY: help
-# https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help: Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
@@ -20,8 +19,8 @@ build: ## Build node code
 tidy: ## Tidy the code
 	@echo "Tidying..."
 	@pnpm type-check
-	# @pnpm lint
 	@pnpm format:write
+	@pnpm lint
 
 dev: ## Debug the app
 	@echo "Debugging ..."
@@ -47,9 +46,5 @@ ps: ## Show status of services
 	@echo "Status of services..."
 	@docker compose ps
 
-chrome: ## Open browser with predefined urls
-	@./chrome.sh
-
 .PHONY: build dev clean image up down ps
-.PHONY: chrome
 ##

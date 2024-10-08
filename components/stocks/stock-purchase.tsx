@@ -13,6 +13,8 @@ interface Purchase {
   status: 'requires_action' | 'completed' | 'expired'
 }
 
+export type PurchaseProps = Purchase
+
 export function Purchase({
   props: { numberOfShares, symbol, price, status = 'expired' }
 }: {

@@ -10,6 +10,8 @@ interface Stock {
   delta: number
 }
 
+export type StockProps = Stock
+
 function scaleLinear(domain: [number, number], range: [number, number]) {
   const [d0, d1] = domain
   const [r0, r1] = range
