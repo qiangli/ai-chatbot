@@ -69,6 +69,7 @@ EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV AUTH_SECRET="PsC+CzdoJ0iIJGkA0h7VrCKjUuEzXH+BFUiLsf0JjuQ="
 
 CMD ["node", "server.js"]
 ##

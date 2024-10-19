@@ -1,8 +1,6 @@
+###
+
 #
-# This file is not required to build anything in this repo.
-# it is just a shortcut to a list of available shell scripts and docker commands
-# for convenience only. To show available targets, run:
-# 
 # make
 #
 .DEFAULT_GOAL := help
@@ -47,4 +45,5 @@ ps: ## Show status of services
 	@docker compose ps
 
 .PHONY: build dev clean image up down ps
-##
+
+###
