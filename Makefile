@@ -30,7 +30,7 @@ image: ## Build docker images
 	@echo "Building docker images..."
 	@docker buildx bake
 
-up: ## Start services
+up: image ## Start services
 	@echo "Starting services..."
 	@docker compose up -d
 
