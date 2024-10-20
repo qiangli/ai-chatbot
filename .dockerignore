@@ -1,0 +1,36 @@
+#
+Dockerfile
+.dockerignore
+compose.yaml
+compose.*.yaml
+
+Makefile
+build.sh
+#
+node_modules
+npm-debug.log
+README.md
+.git
+
+#
+.next/
+out/
+build
+
+# testing
+coverage
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+*-debug.log*
+*-error.log*
+
+#
+.vscode/*
+
+.env
+.env*.local
+!.env.docker.local

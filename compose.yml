@@ -1,0 +1,46 @@
+###
+services:
+  # https://github.com/vercel/ai-chatbot
+  # https://vercel.com/guides/does-vercel-support-docker-deployments
+  ask:
+    image: openaide/ask
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      # target: builder
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    command: ["node", "server.js"]
+    # NEXT_DEBUG=true pnpm dev
+    # command: ["pnpm", "dev"]
+    env_file:
+      - .env
+    environment:
+        - AUTH_TRUST_HOST=true
+    #   - OPENAI_API_KEY=${OPENAI_API_KEY}
+    #   - OPENAI_MODEL=${OPENAI_MODEL:-"gpt-4o"}
+    #   # Generate a random secret: `openssl rand -base64 32`
+    #   - AUTH_SECRET=${AUTH_SECRET}
+    #   - BLOB_READ_WRITE_TOKEN=${BLOB_READ_WRITE_TOKEN}
+    #   - POSTGRES_URL=postgres://${DB_CREDENTIAL}@postgres:5432/documents
+    # - NEXT_DEBUG=true
+    # ports:
+    #   - 3000:3000
+    restart: always
+    networks:
+      - openland
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=openland
+      - traefik.http.routers.ask.rule=Host(`ask.openaide.localhost`)
+      - traefik.http.routers.ask.entrypoints=web
+      - traefik.http.services.ask.loadbalancer.server.port=3000
+      - custom.traefik.group=openaide
+
+##
+networks:
+  openland:
+    external: true
+
+###
